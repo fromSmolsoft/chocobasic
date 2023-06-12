@@ -18,8 +18,8 @@ $form.Controls.Add($label)
 
 # Create checkboxes dynamically based on the content of the script
 $checkBoxes = @()
-$packages = @{}
-$currentCategory = ""
+# $packages = @{}
+# $currentCategory = ""
 
 $scriptPath = Join-Path -Path $PSScriptRoot -ChildPath "..\chocolatey_install_all.ps1"  # Set the correct relative path to the base script
 
@@ -27,42 +27,48 @@ $scriptPath = Join-Path -Path $PSScriptRoot -ChildPath "..\chocolatey_install_al
 $scriptContent = Get-Content -Path $scriptPath
 
 # Parse the content and extract package names and categories
-foreach ($line in $scriptContent) {
-    if ($line -match "^# (.+)$") {
-        $currentCategory = $matches[1]
-    } elseif ($line -match "choco install ([^\s]+)") {
-        $packageName = $matches[1]
-        $packages[$packageName] = $currentCategory
-    }
-}
+$groupLabels = $scriptContent | Select-String -Pattern "^##\s(.+)" | ForEach-Object { $_.Matches.Groups[1].Value }
 
 $currentY = 50
 $checkBoxWidth = $form.ClientSize.Width - 60  # Adjusted width based on form width
-foreach ($package in $packages.GetEnumerator() | Sort-Object -Property Value) {
-    $packageName = $package.Key
-    $category = $package.Value
+$groupPackages = @{}
+foreach ($groupLabel in $groupLabels) {
+    # Initialize packages array for the group label
+    $groupPackages[$groupLabel] = @()
 
-    # Add category label if it's a new category
-    if ($category -ne $currentCategory) {
-        $currentY += 30
-        $categoryLabel = New-Object System.Windows.Forms.Label
-        $categoryLabel.Location = New-Object System.Drawing.Point(20, $currentY)
-        $categoryLabel.AutoSize = $true  # Adjusted to enable label resizing
-        $categoryLabel.Text = $category
-        $form.Controls.Add($categoryLabel)
-
-        $currentCategory = $category
-    }
-
-    # Create checkbox for each package
-    $currentY += 25
-    $checkBox = New-Object System.Windows.Forms.CheckBox
-    $checkBox.Location = New-Object System.Drawing.Point(40, $currentY)
-    $checkBox.Size = New-Object System.Drawing.Size($checkBoxWidth, 20)  # Adjusted size based on form width
-    $checkBox.Text = $packageName
-    $checkBoxes += $checkBox
-    $form.Controls.Add($checkBox)
 }
+
+foreach ($line in $scriptContent) {
+    if ($line -match "^##\s(.+)$") {
+        $currentCategory = $matches[1]
+    } elseif ($line -match "choco install ([^\s]+)") {
+        $packageName = $matches[1]
+        $groupPackages[$currentCategory] += $packageName
+    }
+}
+
+foreach ($groupLabel in $groupLabels) {
+    # Add category label
+    $currentY += 30
+    $categoryLabel = New-Object System.Windows.Forms.Label
+    $categoryLabel.Location = New-Object System.Drawing.Point(20, $currentY)
+    $categoryLabel.AutoSize = $true  # Adjusted to enable label resizing
+    $categoryLabel.Text = $groupLabel
+    $form.Controls.Add($categoryLabel)
+
+    # Find corresponding packages for the group label
+    $groupPackages[$groupLabel] | ForEach-Object {
+        $currentY += 25
+        $checkBox = New-Object System.Windows.Forms.CheckBox
+        $checkBox.Location = New-Object System.Drawing.Point(40, $currentY)
+        $checkBox.Size = New-Object System.Drawing.Size($checkBoxWidth, 20)  # Adjusted size based on form width
+        $checkBox.Text = $_
+        $checkBoxes += $checkBox
+        $form.Controls.Add($checkBox)
+    }
+}
+
+
 
 # Create the "OK" button
 $okButton = New-Object System.Windows.Forms.Button

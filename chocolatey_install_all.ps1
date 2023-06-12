@@ -2,7 +2,7 @@
 choco install firefox --params "/NoDesktopShortcut /NoAutoUpdate" -y
 choco install thunderbird --params "/NoDesktopShortcut /NoAutoUpdate" -y
 
-# cloud
+## cloud
 choco install dropbox -y
 choco install megasync -y
 choco install pcloud -y
@@ -20,18 +20,18 @@ choco install bulk-crap-uninstaller -y
 choco install monitorian -y
 choco install sharex -y
 
-# development
+## development
 choco install git --version -y
 choco install gitextensions.portable -y
 choco install powershell-core - --install-arguments='"DISABLE_TELEMETRY=1"' -y
 
-# IDEs & editors
+## IDEs & editors
 choco install notepadplusplus  -y
 choco install vscode -y
 choco install intellijidea-community -y
 choco install androidstudio -y
 
-# java
+## java
 choco install temurin17 -y <# LTS SDK #>
 choco install temurin8 -y <# java 8 SDK #>
 choco install temurin -y <# Latest SDK #>
