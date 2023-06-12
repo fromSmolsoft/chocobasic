@@ -3,50 +3,87 @@ Add-Type -AssemblyName System.Windows.Forms
 # Create a new form
 $form = New-Object System.Windows.Forms.Form
 $form.Text = "Chocolatey Install"
-$form.Size = New-Object System.Drawing.Size(300, 400)
-$form.FormBorderStyle = 'FixedDialog'
-$form.MaximizeBox = $false
+$form.Width = 400
+$form.Height = 400
+$form.FormBorderStyle = 'Sizable'
+$form.MaximizeBox = $true
+$form.AutoScroll = $true
 
 # Create a label
 $label = New-Object System.Windows.Forms.Label
 $label.Location = New-Object System.Drawing.Point(10, 20)
-$label.Size = New-Object System.Drawing.Size(280, 20)
+$label.AutoSize = $true  # Adjusted to enable label resizing
 $label.Text = "Select packages to install:"
 $form.Controls.Add($label)
 
 # Create checkboxes dynamically based on the content of the script
 $checkBoxes = @()
-$packages = @()
+$packages = @{}
+$currentCategory = ""
+
 $scriptPath = Join-Path -Path $PSScriptRoot -ChildPath "..\chocolatey_install_all.ps1"  # Set the correct relative path to the base script
 
 # Read the content of the base script
 $scriptContent = Get-Content -Path $scriptPath
 
-# Parse the content and extract package names
+# Parse the content and extract package names and categories
 foreach ($line in $scriptContent) {
-    if ($line -match "choco install ([^\s]+)") {
+    if ($line -match "^# (.+)$") {
+        $currentCategory = $matches[1]
+    } elseif ($line -match "choco install ([^\s]+)") {
         $packageName = $matches[1]
-        $packages += $packageName
+        $packages[$packageName] = $currentCategory
     }
 }
 
-for ($i = 0; $i -lt $packages.Count; $i++) {
+$currentY = 50
+$checkBoxWidth = $form.ClientSize.Width - 60  # Adjusted width based on form width
+foreach ($package in $packages.GetEnumerator() | Sort-Object -Property Value) {
+    $packageName = $package.Key
+    $category = $package.Value
+
+    # Add category label if it's a new category
+    if ($category -ne $currentCategory) {
+        $currentY += 30
+        $categoryLabel = New-Object System.Windows.Forms.Label
+        $categoryLabel.Location = New-Object System.Drawing.Point(20, $currentY)
+        $categoryLabel.AutoSize = $true  # Adjusted to enable label resizing
+        $categoryLabel.Text = $category
+        $form.Controls.Add($categoryLabel)
+
+        $currentCategory = $category
+    }
+
+    # Create checkbox for each package
+    $currentY += 25
     $checkBox = New-Object System.Windows.Forms.CheckBox
-    $checkBox.Location = [System.Drawing.Point]::new(20, 50 + $i * 25)
-    # $checkBox.Size = New-Object System.Drawing.Size(200, 20)
-    $checkBox.Text = $packages[$i]
+    $checkBox.Location = New-Object System.Drawing.Point(40, $currentY)
+    $checkBox.Size = New-Object System.Drawing.Size($checkBoxWidth, 20)  # Adjusted size based on form width
+    $checkBox.Text = $packageName
     $checkBoxes += $checkBox
     $form.Controls.Add($checkBox)
 }
 
 # Create the "OK" button
 $okButton = New-Object System.Windows.Forms.Button
-$okButton.Location = New-Object System.Drawing.Point(100, 350)
+$okButton.Location = New-Object System.Drawing.Point([int](($form.ClientSize.Width - $okButton.Width) / 2), [int]($currentY + 40))
+
 $okButton.Size = New-Object System.Drawing.Size(75, 23)
 $okButton.Text = "OK"
 $okButton.DialogResult = [System.Windows.Forms.DialogResult]::OK
 $form.AcceptButton = $okButton
 $form.Controls.Add($okButton)
+
+# Subscribe to the form's Resize event
+$form.add_Resize({
+    $label.Width = $form.ClientSize.Width - 20
+    $checkBoxWidth = $form.ClientSize.Width - 60
+    foreach ($checkBox in $checkBoxes) {
+        $checkBox.Location = New-Object System.Drawing.Point(40, $checkBox.Location.Y)
+        $checkBox.Width = $checkBoxWidth
+    }
+    $okButton.Location = New-Object System.Drawing.Point([int](($form.ClientSize.Width - $okButton.Width) / 2), [int]($currentY + 40))
+})
 
 # Show the form and handle the result
 $result = $form.ShowDialog()
