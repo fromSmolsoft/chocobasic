@@ -1,15 +1,15 @@
 # chocobasic
 
-Simple powershell UI utility that can read chocolatey install scripts
+Simple powershell UI utility that can dynamically read chocolatey install scripts.
 
 ### How to use
 
-1. run `ui/form.ps1` in PowerShell as admin
-2. check checkboxes
-3. click ok
+1. insert you own chocolatey install scripts into `*.ps1` in root directory
+2. run `ui/form.ps1` in PowerShell as admin
+3. check checkboxes
+4. click ok
 
-`*.ps1` file in root directory includes install scripts and comments with double `#`  
 `ui/form.ps1` will read this file in following way
 
-- `##` marks group label e.g. `## internet` > `internet` label in UI
-- choco install ... marks command to be executed
+- `##` creates group label e.g. `## internet` > `internet` label above checkboxes in UI
+- choco install ... marks command to be executed and command will be shown next to its own checkbox
