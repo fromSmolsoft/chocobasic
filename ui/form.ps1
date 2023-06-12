@@ -66,7 +66,8 @@ foreach ($package in $packages.GetEnumerator() | Sort-Object -Property Value) {
 
 # Create the "OK" button
 $okButton = New-Object System.Windows.Forms.Button
-$okButton.Location = New-Object System.Drawing.Point(($form.ClientSize.Width - $okButton.Width) / 2, $currentY + 40)
+$okButton.Location = New-Object System.Drawing.Point([int](($form.ClientSize.Width - $okButton.Width) / 2), [int]($currentY + 40))
+
 $okButton.Size = New-Object System.Drawing.Size(75, 23)
 $okButton.Text = "OK"
 $okButton.DialogResult = [System.Windows.Forms.DialogResult]::OK
@@ -80,7 +81,8 @@ $form.add_Resize({
     foreach ($checkBox in $checkBoxes) {
         $checkBox.Width = $checkBoxWidth
     }
-    $okButton.Location = New-Object System.Drawing.Point(($form.ClientSize.Width - $okButton.Width) / 2, $currentY + 40)
+    $okButton.Location = New-Object System.Drawing.Point([int](($form.ClientSize.Width - $okButton.Width) / 2), [int]($currentY + 40))
+
 })
 
 # Show the form and handle the result
