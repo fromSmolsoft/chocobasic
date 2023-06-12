@@ -16,25 +16,46 @@ $form.Controls.Add($label)
 
 # Create checkboxes dynamically based on the content of the script
 $checkBoxes = @()
-$packages = @()
+$packages = @{}
+$currentCategory = ""
+
 $scriptPath = Join-Path -Path $PSScriptRoot -ChildPath "..\chocolatey_install_all.ps1"  # Set the correct relative path to the base script
 
 # Read the content of the base script
 $scriptContent = Get-Content -Path $scriptPath
 
-# Parse the content and extract package names
+# Parse the content and extract package names and categories
 foreach ($line in $scriptContent) {
-    if ($line -match "choco install ([^\s]+)") {
+    if ($line -match "^# (.+)$") {
+        $currentCategory = $matches[1]
+    } elseif ($line -match "choco install ([^\s]+)") {
         $packageName = $matches[1]
-        $packages += $packageName
+        $packages[$packageName] = $currentCategory
     }
 }
 
-for ($i = 0; $i -lt $packages.Count; $i++) {
+$currentY = 50
+foreach ($package in $packages.GetEnumerator() | Sort-Object -Property Value) {
+    $packageName = $package.Key
+    $category = $package.Value
+
+    # Add category label if it's a new category
+    if ($category -ne $currentCategory) {
+        $currentY += 30
+        $categoryLabel = New-Object System.Windows.Forms.Label
+        $categoryLabel.Location = New-Object System.Drawing.Point(20, $currentY)
+        $categoryLabel.Size = New-Object System.Drawing.Size(260, 20)
+        $categoryLabel.Text = $category
+        $form.Controls.Add($categoryLabel)
+
+        $currentCategory = $category
+    }
+
+    # Create checkbox for each package
+    $currentY += 25
     $checkBox = New-Object System.Windows.Forms.CheckBox
-    $checkBox.Location = [System.Drawing.Point]::new(20, 50 + $i * 25)
-    # $checkBox.Size = New-Object System.Drawing.Size(200, 20)
-    $checkBox.Text = $packages[$i]
+    $checkBox.Location = New-Object System.Drawing.Point(40, $currentY)
+    $checkBox.Text = $packageName
     $checkBoxes += $checkBox
     $form.Controls.Add($checkBox)
 }
