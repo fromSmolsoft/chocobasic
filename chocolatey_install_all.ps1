@@ -1,19 +1,44 @@
-choco install firefox --params "/NoDesktopShortcut " -y
-choco install 7zip.install --version 22.1 -y
-choco install notepadplusplus --version 8.5.3 -y
-choco install git --version 2.41.0 -y
-choco install gitextensions.portable --version 4.0.2 -y
-choco install vscode --version 1.79.0 -y
-choco install intellijidea-community --version 2023.1.2 -y
-choco install androidstudio --version 2022.2.1.20 -y
-choco install thunderbird --version 102.12.0 -y
-choco install powershell-core --version 7.3.4 -y
-choco install powertoys --version 0.70.1 -y
-choco install dropbox --version 173.4.6706 -y
-choco install megasync --version 4.9.4.0 -y
-choco install bulk-crap-uninstaller --version 5.6 -y
-choco install freefilesync --version 10.2.0.20180914 -y
-choco install dupeguru --version 4.3.1 -y
-choco install winscp --version 6.1 -y
-choco install monitorian --version 4.3.5 -y
-choco install sharex --version 15.0.0 -y
+# internet access
+choco install firefox --params "/NoDesktopShortcut /NoAutoUpdate" -y
+choco install thunderbird --params "/NoDesktopShortcut /NoAutoUpdate" -y
+
+#Cloud
+choco install dropbox -y
+choco install megasync -y
+choco install pcloud -y
+
+# tools
+choco install 7zip.install --params "/NoContextMenu" -y
+choco install freefilesync -y
+
+# choco install totalcommander --params '/NoDesktopIcon' -y
+choco install doublecmd --params "/NoDesktopIcon" -y
+choco install dupeguru -y
+choco install winscp -y
+choco install powertoys -y
+choco install bulk-crap-uninstaller -y
+choco install monitorian -y
+choco install sharex -y
+
+# development
+choco install notepadplusplus  -y
+choco install git --version -y
+choco install gitextensions.portable -y
+choco install vscode -y
+choco install powershell-core - --install-arguments='"DISABLE_TELEMETRY=1"' -y
+
+# IDEs
+choco install intellijidea-community -y
+choco install androidstudio -y
+
+# java
+choco install temurin17 -y <# LTS SDK #>
+choco install temurin8 -y <# java 8 SDK #>
+choco install temurin -y <# Latest SDK #>
+
+
+
+
+
+
+
