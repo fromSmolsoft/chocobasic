@@ -12,7 +12,7 @@ $form.AutoScroll = $true
 # Create a label
 $label = New-Object System.Windows.Forms.Label
 $label.Location = New-Object System.Drawing.Point(10, 20)
-$label.Width = $form.Width - 20
+$label.AutoSize = $true  # Adjusted to enable label resizing
 $label.Text = "Select packages to install:"
 $form.Controls.Add($label)
 
@@ -47,7 +47,7 @@ foreach ($package in $packages.GetEnumerator() | Sort-Object -Property Value) {
         $currentY += 30
         $categoryLabel = New-Object System.Windows.Forms.Label
         $categoryLabel.Location = New-Object System.Drawing.Point(20, $currentY)
-        $categoryLabel.Size = New-Object System.Drawing.Size($form.ClientSize.Width - 40, 20)  # Adjusted size based on form width
+        $categoryLabel.AutoSize = $true  # Adjusted to enable label resizing
         $categoryLabel.Text = $category
         $form.Controls.Add($categoryLabel)
 
@@ -75,10 +75,10 @@ $form.Controls.Add($okButton)
 
 # Subscribe to the form's Resize event
 $form.add_Resize({
-    $label.Size = New-Object System.Drawing.Size($form.ClientSize.Width - 20, 20)
+    $label.Width = $form.ClientSize.Width - 20
     $checkBoxWidth = $form.ClientSize.Width - 60
     foreach ($checkBox in $checkBoxes) {
-        $checkBox.Size = New-Object System.Drawing.Size($checkBoxWidth, 20)
+        $checkBox.Width = $checkBoxWidth
     }
     $okButton.Location = New-Object System.Drawing.Point(($form.ClientSize.Width - $okButton.Width) / 2, $currentY + 40)
 })
