@@ -5,8 +5,8 @@ $form = New-Object System.Windows.Forms.Form
 $form.Text = "Chocolatey Install"
 $form.Width = 400
 $form.Height = 400
-$form.FormBorderStyle = 'FixedDialog'
-$form.MaximizeBox = $false
+$form.FormBorderStyle = 'Sizable'
+$form.MaximizeBox = $true
 $form.AutoScroll = $true
 
 # Create a label
@@ -79,10 +79,10 @@ $form.add_Resize({
     $label.Width = $form.ClientSize.Width - 20
     $checkBoxWidth = $form.ClientSize.Width - 60
     foreach ($checkBox in $checkBoxes) {
+        $checkBox.Location = New-Object System.Drawing.Point(40, $checkBox.Location.Y)
         $checkBox.Width = $checkBoxWidth
     }
     $okButton.Location = New-Object System.Drawing.Point([int](($form.ClientSize.Width - $okButton.Width) / 2), [int]($currentY + 40))
-
 })
 
 # Show the form and handle the result
