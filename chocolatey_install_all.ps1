@@ -1,4 +1,4 @@
-# internet access
+# internet 
 choco install firefox --params "/NoDesktopShortcut /NoAutoUpdate" -y
 choco install thunderbird --params "/NoDesktopShortcut /NoAutoUpdate" -y
 
