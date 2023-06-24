@@ -12,13 +12,29 @@ choco install 7zip.install --params "/NoContextMenu" -y
 # choco install freefilesync -y
 # choco install totalcommander --params '/NoDesktopIcon' -y
 choco install doublecmd --params "/NoDesktopIcon" -y
+choco install dropit.portable
+# choco install dropit.install
 choco install dupeguru -y
+
 choco install winscp -y
+choco install filezilla -y
 
 choco install powertoys -y
 choco install bulk-crap-uninstaller -y
 choco install monitorian -y
 choco install sharex -y
+
+## office
+choco install libreoffice-fresh -y
+
+## video
+choco install vlc -y
+
+## music
+choco install audacious -y
+
+## media edit
+choco install audacity -y
 
 ## development
 choco install git --params "'/NoShellIntegration /WindowsTerminalProfile /DefaultBranchName:main'" -y
