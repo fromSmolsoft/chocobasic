@@ -2,12 +2,15 @@
 choco install firefox --params "/NoDesktopShortcut /NoAutoUpdate" -y
 choco install thunderbird --params "/NoDesktopShortcut /NoAutoUpdate" -y
 
+## social
+choco install signal --params "/NoAutoUpdate /NoShortcut" -y
+
 ## cloud
 choco install dropbox -y
 choco install megasync -y
 choco install pcloud -y
 
-## tools
+## data management
 choco install 7zip.install --params "/NoContextMenu" -y
 # choco install freefilesync -y
 # choco install totalcommander --params '/NoDesktopIcon' -y
@@ -19,21 +22,22 @@ choco install dupeguru -y
 choco install winscp -y
 choco install filezilla -y
 
+## tools
 choco install powertoys -y
 choco install bulk-crap-uninstaller -y
 choco install monitorian -y
 choco install sharex -y
+# choco install hwinfo -y
+choco install hwinfo.portable -y
 
 ## office
 choco install libreoffice-fresh -y
 
-## video
+## media
 choco install vlc -y
-
-## music
 choco install audacious -y
 
-## media edit
+## media editor
 choco install audacity -y
 
 ## development
