@@ -18,10 +18,9 @@ $form.Controls.Add($label)
 
 # Create checkboxes dynamically based on the content of the script
 $checkBoxes = @()
-# $packages = @{}
-# $currentCategory = ""
 
-$scriptPath = Join-Path -Path $PSScriptRoot -ChildPath "..\chocolatey_install_all.ps1"  # Set the correct relative path to the base script
+# Set the correct relative path to the base script
+$scriptPath = Join-Path -Path $PSScriptRoot -ChildPath "..\chocolatey_install_all.ps1"  
 
 # Read the content of the base script
 $scriptContent = Get-Content -Path $scriptPath
@@ -35,13 +34,13 @@ $groupPackages = @{}
 foreach ($groupLabel in $groupLabels) {
     # Initialize packages array for the group label
     $groupPackages[$groupLabel] = @()
-
 }
 
 foreach ($line in $scriptContent) {
     if ($line -match "^##\s(.+)$") {
         $currentCategory = $matches[1]
-    } elseif ($line -match "choco install ([^\s]+)") {
+    }
+    elseif ($line -match "choco install ([^\s]+)") {
         $packageName = $matches[1]
         $groupPackages[$currentCategory] += $packageName
     }
@@ -82,14 +81,14 @@ $form.Controls.Add($okButton)
 
 # Subscribe to the form's Resize event
 $form.add_Resize({
-    $label.Width = $form.ClientSize.Width - 20
-    $checkBoxWidth = $form.ClientSize.Width - 60
-    foreach ($checkBox in $checkBoxes) {
-        $checkBox.Location = New-Object System.Drawing.Point(40, $checkBox.Location.Y)
-        $checkBox.Width = $checkBoxWidth
-    }
-    $okButton.Location = New-Object System.Drawing.Point([int](($form.ClientSize.Width - $okButton.Width) / 2), [int]($currentY + 40))
-})
+        $label.Width = $form.ClientSize.Width - 20
+        $checkBoxWidth = $form.ClientSize.Width - 60
+        foreach ($checkBox in $checkBoxes) {
+            $checkBox.Location = New-Object System.Drawing.Point(40, $checkBox.Location.Y)
+            $checkBox.Width = $checkBoxWidth
+        }
+        $okButton.Location = New-Object System.Drawing.Point([int](($form.ClientSize.Width - $okButton.Width) / 2), [int]($currentY + 40))
+    })
 
 # Show the form and handle the result
 $result = $form.ShowDialog()
